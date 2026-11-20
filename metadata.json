@@ -1,0 +1,6 @@
+{
+  "name": "ARTSPACE — Galeri Editorial Seni Rupa Kontemporer",
+  "description": "Ruang pamer editorial seni rupa kontemporer berskala internasional: pameran kuratorial, katalog koleksi dengan nomor aksesi, monograf seniman, dan layanan akuisisi privat.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

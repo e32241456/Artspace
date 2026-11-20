@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@source "../views";
+@source "../js";
+@source "../../scripts";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
+
+  /* Light Mode — Identitas Visual Resmi ARTSPACE (Olive & Mustard) */
+  --color-art-bg: #F4F1E6;
+  --color-art-surface: #EAE5D5;
+  --color-art-card: #FBF9F2;
+  --color-art-primary: #354638;
+  --color-art-secondary: #77805B;
+  --color-art-accent: #D4A943;
+  --color-art-text: #302C25;
+  --color-art-muted: #68705C;
+  --color-art-border: #D6D1C2;
+  --color-art-hover: #29382D;
+
+  /* Dark Mode — Identitas Visual Resmi ARTSPACE */
+  --color-art-dark-bg: #171D18;
+  --color-art-dark-surface: #20291F;
+  --color-art-dark-card: #293326;
+  --color-art-dark-primary: #A5B18A;
+  --color-art-dark-secondary: #899775;
+  --color-art-dark-text: #F1EBDD;
+  --color-art-dark-muted: #B8BDAA;
+  --color-art-dark-border: #3A4637;
+  --color-art-dark-hover: #354638;
+}
+
+@layer base {
+  html {
+    font-family: "Manrope", system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: "Playfair Display", Georgia, serif;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid #D4A943;
+    outline-offset: 2px;
+  }
+}
+
+.label-caps {
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* 1. Transisi Navigasi */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageFadeIn 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 2. Tipografi Kinetik Editorial */
+@keyframes kineticRise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    letter-spacing: 0.015em;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: -0.015em;
+  }
+}
+
+.kinetic-heading {
+  animation: kineticRise 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 3. Transisi Gambar Detail */
+@keyframes detailScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.detail-image-reveal {
+  animation: detailScaleIn 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 4. Masonry Dinamis & Scroll Reveal */
+.masonry-item {
+  transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 180ms ease;
+}
+
+.reveal-on-scroll {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-on-scroll.is-pending {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hormati preferensi pengurangan gerak (prefers-reduced-motion) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .page-enter,
+  .kinetic-heading,
+  .detail-image-reveal {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
