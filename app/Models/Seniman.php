@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Seniman extends Model
@@ -43,7 +44,7 @@ class Seniman extends Model
     public function getUrlFotoAttribute(): string
     {
         if (! $this->foto_profil) {
-            return asset('images/artist_studio_portrait_1795137301009.jpg');
+            return asset('images/di-balik-senja.png');
         }
 
         if (Str::startsWith($this->foto_profil, ['http://', 'https://', '/'])) {
@@ -52,6 +53,10 @@ class Seniman extends Model
 
         if (Str::startsWith($this->foto_profil, 'images/')) {
             return asset($this->foto_profil);
+        }
+
+        if (Str::startsWith($this->foto_profil, 'supabase/')) {
+            return Storage::disk('supabase')->url(substr($this->foto_profil, 9));
         }
 
         return asset('storage/' . ltrim($this->foto_profil, '/'));

@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Akun Administrator Sistem
-        Pengguna::updateOrCreate(
+        Pengguna::firstOrCreate(
             ['surel' => 'admin@artspace.id'],
             [
                 'nama' => 'Administrator ARTSPACE',
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
                 'nama_lengkap' => 'Baskoro Wijaya',
                 'kota' => 'Yogyakarta',
                 'disiplin' => 'Lukisan Mineral & Media Campuran',
-                'foto_profil' => 'images/artist_studio_portrait_1795137301009.jpg',
+                'foto_profil' => 'images/di-balik-senja.png',
                 'biografi_singkat' => 'Perupa lukis dan media campuran asal Yogyakarta yang meneliti lapisan pigmen tanah vulkanik dan struktur ruang sunyi.',
                 'biografi' => 'Baskoro Wijaya bekerja dengan pigmen tanah vulkanik, cat minyak, lilin dingin, dan kertas serat murbei di atas linen mentah. Karyanya membaca ulang bobot material geologis dalam komposisi bidang warna arsitektural.',
                 'latar_belakang' => 'Sarjana Seni Lukis Institut Seni Indonesia (ISI) Yogyakarta dan alumnus residensi seni rupa kontemporer di Basel serta Tokyo.',
@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
                 'nama_lengkap' => 'Ratna Kusumawati',
                 'kota' => 'Bandung',
                 'disiplin' => 'Keramik Stoneware & Patung Perunggu',
-                'foto_profil' => 'images/potret_seniman_perempuan_1795141268117.jpg',
+                'foto_profil' => 'images/fragmen-kehidupan.png',
                 'biografi_singkat' => 'Pematung dan perupa keramik berbasis di Bandung yang merancang bejana kontemplatif serta bentuk organik berbahan tanah liat dan perunggu.',
                 'biografi' => 'Ratna Kusumawati mengolah tanah liat lokal Jawa Barat dengan pembakaran tungku kayu suhu tinggi serta pengecoran perunggu teknik lost-wax untuk menghadirkan keheningan bentuk arsitektural.',
                 'latar_belakang' => 'Magister Seni Rupa Fakultas Seni Rupa dan Desain (FSRD) ITB Bandung; pernah menjalani program studi keramik tradisional di Mashiko, Jepang.',
@@ -85,7 +85,7 @@ class DatabaseSeeder extends Seeder
                 'nama_lengkap' => 'Darmawan Setiadi',
                 'kota' => 'Jakarta',
                 'disiplin' => 'Fotografi Arsitektur & Cetakan Arsip',
-                'foto_profil' => 'images/hero_exhibition_pavilion_1795137300545.jpg',
+                'foto_profil' => 'images/ruang-yang-tertinggal.png',
                 'biografi_singkat' => 'Fotografer arsitektur format besar yang merekam pertemuan cahaya matahari tropis, bayangan beton, dan ritme ruang publik.',
                 'biografi' => 'Darmawan Setiadi bekerja secara eksklusif menggunakan kamera analog format besar 4x5 inci dan cetakan arsip kertas kapas untuk menangkap geometri cahaya alami tanpa manipulasi digital.',
                 'latar_belakang' => 'Lulusan Arsitektur Universitas Indonesia yang memperdalam fotografi dokumenter dan pencetakan kamar gelap di Amsterdam.',
@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
                 'nama_lengkap' => 'Sekar Ayu Prameswari',
                 'kota' => 'Denpasar',
                 'disiplin' => 'Tekstil Serat Alam & Relief Dinding',
-                'foto_profil' => 'images/exhibition_pavilion_hall_1795137300627.jpg',
+                'foto_profil' => 'images/warna-dalam-keheningan.png',
                 'biografi_singkat' => 'Perupa tekstil dan relief kontemporer asal Bali yang memadukan pewarna alam kunyit, daun ketapang, dan batu kapur ukir.',
                 'biografi' => 'Sekar Ayu Prameswari menjembatani tradisi tenun tangan dan relief mineral kontemporer melalui komposisi tekstil berskala arsitektural dengan palet oker, zaitun, dan krem alami.',
                 'latar_belakang' => 'Sarjana Desain Tekstil Institut Seni Indonesia (ISI) Denpasar dan peneliti pewarna alami botani Nusantara.',
@@ -118,7 +118,7 @@ class DatabaseSeeder extends Seeder
 
         $senimanMap = [];
         foreach ($daftarSeniman as $item) {
-            $pengguna = Pengguna::updateOrCreate(
+            $pengguna = Pengguna::firstOrCreate(
                 ['surel' => $item['surel']],
                 [
                     'nama' => $item['nama_lengkap'],
@@ -174,7 +174,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '195 × 145 cm',
                 'informasi_tambahan' => 'Karya unik seri Strata Geologis; dikerjakan selama empat bulan dengan teknik pisau palet berlapis.',
                 'harga_opsional' => 285000000,
-                'foto_karya' => 'images/artwork_terracotta_monolith_1795137300116.jpg',
+                'foto_karya' => 'images/warna-dalam-keheningan.png',
             ],
             [
                 'slug' => 'bejana-stoneware-lumut-tinggi',
@@ -187,7 +187,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '82 × 28 × 28 cm',
                 'informasi_tambahan' => 'Dibentuk secara manual dengan teknik pilin (coiling) tanpa cetakan pabrik.',
                 'harga_opsional' => 64000000,
-                'foto_karya' => 'images/karya_keramik_tanah_liat_1795141267838.jpg',
+                'foto_karya' => 'images/fragmen-kehidupan.png',
             ],
             [
                 'slug' => 'kolonade-pukul-empat',
@@ -200,7 +200,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '110 × 145 cm',
                 'informasi_tambahan' => 'Edisi terbatas 1 dari 5; dilengkapi sertifikat arsip studio fotografer.',
                 'harga_opsional' => null,
-                'foto_karya' => 'images/artwork_architectural_shadow_1795137301125.jpg',
+                'foto_karya' => 'images/ruang-yang-tertinggal.png',
             ],
             [
                 'slug' => 'arsip-kertas-murbei-07',
@@ -213,7 +213,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '90 × 90 cm',
                 'informasi_tambahan' => 'Bagian dari seri riset kertas arsip Nusantara.',
                 'harga_opsional' => 42000000,
-                'foto_karya' => 'images/karya_kolase_kertas_arsip_1795141267716.jpg',
+                'foto_karya' => 'images/di-balik-senja.png',
             ],
             [
                 'slug' => 'tenun-dinding-oker-senja',
@@ -226,7 +226,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '180 × 125 cm',
                 'informasi_tambahan' => 'Ditenun menggunakan alat tenun bukan mesin (ATBM) selama sembilan minggu.',
                 'harga_opsional' => 115000000,
-                'foto_karya' => 'images/artwork_ochre_tapestry_1795137301114.jpg',
+                'foto_karya' => 'images/warna-dalam-keheningan.png',
             ],
             [
                 'slug' => 'studi-botani-tinta-sumi-ii',
@@ -239,7 +239,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '76 × 52 cm',
                 'informasi_tambahan' => 'Dikerjakan langsung dari observasi kebun studio pada pagi hari.',
                 'harga_opsional' => null,
-                'foto_karya' => 'images/karya_sketsa_tinta_botani_1795141266938.jpg',
+                'foto_karya' => 'images/di-balik-senja.png',
             ],
             [
                 'slug' => 'patung-bejana-perunggu-senyap',
@@ -252,7 +252,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '48 × 36 × 34 cm',
                 'informasi_tambahan' => 'Dicor di pengecoran logam tradisional Yogyakarta.',
                 'harga_opsional' => 135000000,
-                'foto_karya' => 'images/artwork_bronze_vessel_1795137300508.jpg',
+                'foto_karya' => 'images/fragmen-kehidupan.png',
             ],
             [
                 'slug' => 'relief-kapur-geometri-iii',
@@ -265,7 +265,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '120 × 100 × 7 cm',
                 'informasi_tambahan' => 'Dirancang untuk ditempatkan pada dinding dengan pencahayaan menyamping.',
                 'harga_opsional' => 98000000,
-                'foto_karya' => 'images/artwork_limestone_relief_1795137300409.jpg',
+                'foto_karya' => 'images/ruang-yang-tertinggal.png',
             ],
             [
                 'slug' => 'paviliun-cahaya-utara',
@@ -278,7 +278,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '100 × 150 cm',
                 'informasi_tambahan' => 'Bagian dari seri Arsitektur Ruang Sunyi 2026.',
                 'harga_opsional' => null,
-                'foto_karya' => 'images/hero_exhibition_pavilion_1795137300545.jpg',
+                'foto_karya' => 'images/ruang-yang-tertinggal.png',
             ],
             [
                 'slug' => 'selasar-batu-dan-hening',
@@ -291,7 +291,7 @@ class DatabaseSeeder extends Seeder
                 'dimensi' => '85 × 125 cm',
                 'informasi_tambahan' => 'Pernah dipamerkan pada Biennale Arsitektur Indonesia 2024.',
                 'harga_opsional' => 38000000,
-                'foto_karya' => 'images/exhibition_pavilion_hall_1795137300627.jpg',
+                'foto_karya' => 'images/warna-dalam-keheningan.png',
             ],
         ];
 

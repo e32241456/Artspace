@@ -343,7 +343,29 @@ function inisialisasiZoomDetail() {
   });
 }
 
-function inisialisasiDasborSeniman() {
+function inisialisasiDasborSeniman() {  // Format otomatis harga Rupiah dengan pemisah ribuan
+  const inputHarga = document.querySelectorAll('[data-format-rupiah]');
+
+  inputHarga.forEach((input) => {
+    const formatRupiah = (nilai) => {
+      const angka = String(nilai).replace(/\D/g, '');
+      return angka.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
+    input.value = formatRupiah(input.value);
+
+    input.addEventListener('input', () => {
+      input.value = formatRupiah(input.value);
+    });
+
+    const form = input.closest('form');
+
+    if (form) {
+      form.addEventListener('submit', () => {
+        input.value = input.value.replace(/\./g, '');
+      });
+    }
+  });
   const tombolTab = document.querySelectorAll('[data-tab-dasbor]');
   const panelTab = document.querySelectorAll('[data-panel-dasbor]');
 
@@ -394,11 +416,26 @@ function inisialisasiDasborSeniman() {
       });
     };
 
-    tombolTab.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        aktifkanTab(btn.dataset.tabDasbor || 'karya');
-      });
-    });
+const parameterUrl = new URLSearchParams(window.location.search);
+const tabAwal = parameterUrl.get('tab') || 'karya';
+
+aktifkanTab(
+  Array.from(tombolTab).some((btn) => btn.dataset.tabDasbor === tabAwal)
+    ? tabAwal
+    : 'karya'
+);
+
+tombolTab.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const namaTab = btn.dataset.tabDasbor || 'karya';
+
+    aktifkanTab(namaTab);
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', namaTab);
+    window.history.replaceState({}, '', url);
+  });
+});
   }
 
   document.querySelectorAll('[data-buka-edit]').forEach((btn) => {

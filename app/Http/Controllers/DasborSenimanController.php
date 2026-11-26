@@ -17,6 +17,33 @@ use Illuminate\View\View;
 
 class DasborSenimanController extends Controller
 {
+    /**
+     * Menyimpan foto ke Supabase Storage.
+     */
+    private function simpanFoto($file, string $folder): string
+    {
+        $path = $file->store($folder, 'supabase');
+
+        return 'supabase/' . $path;
+    }
+
+    /**
+     * Menghapus foto lama dari lokasi penyimpanannya.
+     */
+    private function hapusFotoLama(?string $path): void
+    {
+        if (! $path) {
+            return;
+        }
+
+        if (Str::startsWith($path, 'supabase/')) {
+            Storage::disk('supabase')->delete(substr($path, 9));
+            return;
+        }
+
+        Storage::disk('public')->delete($path);
+    }
+
     public function index(Request $request): View
     {
         $seniman = $request->user()->seniman()->with([
@@ -38,18 +65,23 @@ class DasborSenimanController extends Controller
     {
         $seniman = $request->user()->seniman()->firstOrFail();
         $data = $request->validated();
+        $fotoLama = $seniman->foto_profil;
 
         if ($request->hasFile('foto_profil')) {
-            if ($seniman->foto_profil && Storage::disk('public')->exists($seniman->foto_profil)) {
-                Storage::disk('public')->delete($seniman->foto_profil);
-            }
-            $data['foto_profil'] = $request->file('foto_profil')->store('profil-seniman', 'public');
+            $data['foto_profil'] = $this->simpanFoto(
+                $request->file('foto_profil'),
+                'profil-seniman'
+            );
         } else {
             unset($data['foto_profil']);
         }
 
         $seniman->update($data);
         $request->user()->update(['nama' => $data['nama_lengkap']]);
+
+        if (isset($data['foto_profil'])) {
+            $this->hapusFotoLama($fotoLama);
+        }
 
         return back()->with('sukses', 'Profil seniman berhasil diperbarui.');
     }
@@ -59,7 +91,11 @@ class DasborSenimanController extends Controller
         $seniman = $request->user()->seniman()->firstOrFail();
         $data = $request->validated();
 
-        $pathFoto = $request->file('foto_karya')->store('karya-seni', 'public');
+        $pathFoto = $this->simpanFoto(
+            $request->file('foto_karya'),
+            'karya-seni'
+        );
+
         $slug = Str::slug($data['judul']) . '-' . Str::lower(Str::random(5));
 
         $seniman->karyaSeni()->create([
@@ -73,7 +109,7 @@ class DasborSenimanController extends Controller
             'informasi_tambahan' => $data['informasi_tambahan'] ?? null,
             'harga_opsional' => $data['harga_opsional'] ?? null,
             'foto_karya' => $pathFoto,
-            'status' => KaryaSeni::STATUS_TERBIT, // Langsung TERBIT tanpa menunggu persetujuan Admin
+            'status' => KaryaSeni::STATUS_TERBIT,
         ]);
 
         return back()->with('sukses', 'Karya seni berhasil ditambahkan dan langsung terbit di katalog publik.');
@@ -82,18 +118,28 @@ class DasborSenimanController extends Controller
     public function perbaruiKarya(SimpanKaryaSeniRequest $request, KaryaSeni $karya): RedirectResponse
     {
         Gate::authorize('perbarui', $karya);
+
         $data = $request->validated();
+        $fotoLama = $karya->foto_karya;
 
         if ($request->hasFile('foto_karya')) {
-            if ($karya->foto_karya && Storage::disk('public')->exists($karya->foto_karya)) {
-                Storage::disk('public')->delete($karya->foto_karya);
-            }
-            $data['foto_karya'] = $request->file('foto_karya')->store('karya-seni', 'public');
+            $data['foto_karya'] = $this->simpanFoto(
+                $request->file('foto_karya'),
+                'karya-seni'
+            );
         } else {
             unset($data['foto_karya']);
         }
 
+        if ($data['judul'] !== $karya->judul) {
+            $data['slug'] = Str::slug($data['judul']) . '-' . Str::lower(Str::random(5));
+        }
+
         $karya->update($data);
+
+        if (isset($data['foto_karya'])) {
+            $this->hapusFotoLama($fotoLama);
+        }
 
         return back()->with('sukses', 'Informasi karya seni berhasil diperbarui.');
     }
@@ -102,11 +148,11 @@ class DasborSenimanController extends Controller
     {
         Gate::authorize('hapus', $karya);
 
-        if ($karya->foto_karya && Storage::disk('public')->exists($karya->foto_karya)) {
-            Storage::disk('public')->delete($karya->foto_karya);
-        }
+        $foto = $karya->foto_karya;
 
         $karya->delete();
+
+        $this->hapusFotoLama($foto);
 
         return back()->with('sukses', 'Karya seni telah dihapus dari portofolio Anda.');
     }
@@ -116,15 +162,19 @@ class DasborSenimanController extends Controller
         $seniman = $request->user()->seniman()->firstOrFail();
         $seniman->riwayatPameran()->create($request->validated());
 
-        return back()->with('sukses', 'Riwayat pameran berhasil ditambahkan ke profil Anda.');
+        return redirect()->route('dasbor.seniman', ['tab' => 'pameran'])
+            ->with('sukses', 'Riwayat pameran berhasil ditambahkan ke profil Anda.');
     }
 
-    public function perbaruiPameran(SimpanRiwayatPameranRequest $request, RiwayatPameran $riwayat): RedirectResponse
-    {
+    public function perbaruiPameran(
+        SimpanRiwayatPameranRequest $request,
+        RiwayatPameran $riwayat
+    ): RedirectResponse {
         Gate::authorize('kelola', $riwayat);
         $riwayat->update($request->validated());
 
-        return back()->with('sukses', 'Riwayat pameran berhasil diperbarui.');
+        return redirect()->route('dasbor.seniman', ['tab' => 'pameran'])
+            ->with('sukses', 'Riwayat pameran berhasil diperbarui.');
     }
 
     public function hapusPameran(RiwayatPameran $riwayat): RedirectResponse
@@ -132,6 +182,7 @@ class DasborSenimanController extends Controller
         Gate::authorize('kelola', $riwayat);
         $riwayat->delete();
 
-        return back()->with('sukses', 'Riwayat pameran berhasil dihapus.');
+        return redirect()->route('dasbor.seniman', ['tab' => 'pameran'])
+            ->with('sukses', 'Riwayat pameran berhasil dihapus.');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class KaryaSeni extends Model
@@ -48,7 +49,7 @@ class KaryaSeni extends Model
     public function getUrlFotoAttribute(): string
     {
         if (! $this->foto_karya) {
-            return asset('images/artwork_terracotta_monolith_1795137300116.jpg');
+            return asset('images/warna-dalam-keheningan.png');
         }
 
         if (Str::startsWith($this->foto_karya, ['http://', 'https://', '/'])) {
@@ -57,6 +58,10 @@ class KaryaSeni extends Model
 
         if (Str::startsWith($this->foto_karya, 'images/')) {
             return asset($this->foto_karya);
+        }
+
+        if (Str::startsWith($this->foto_karya, 'supabase/')) {
+            return Storage::disk('supabase')->url(substr($this->foto_karya, 9));
         }
 
         return asset('storage/' . ltrim($this->foto_karya, '/'));

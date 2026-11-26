@@ -6,32 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        // Tabel Sesi (untuk SESSION_DRIVER=database di PostgreSQL)
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
-
-        // Tabel Cache (untuk CACHE_STORE=database di PostgreSQL)
-        Schema::create('cache', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->mediumText('value');
-            $table->integer('expiration');
-        });
-
-        Schema::create('cache_locks', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->string('owner');
-            $table->integer('expiration');
-        });
-
-        // Tabel Antrean Pekerjaan (untuk QUEUE_CONNECTION=database di PostgreSQL)
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
             $table->string('queue')->index();
@@ -66,13 +45,13 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('failed_jobs');
-        Schema::dropIfExists('job_batches');
         Schema::dropIfExists('jobs');
-        Schema::dropIfExists('cache_locks');
-        Schema::dropIfExists('cache');
-        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('job_batches');
+        Schema::dropIfExists('failed_jobs');
     }
 };

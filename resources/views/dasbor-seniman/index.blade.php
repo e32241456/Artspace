@@ -120,8 +120,16 @@
               </div>
               <div>
                 <label for="harga_opsional" class="block label-caps text-[#302C25] dark:text-[#F1EBDD] mb-1.5">HARGA OPSIONAL (RP)</label>
-                <input id="harga_opsional" name="harga_opsional" type="number" min="0" value="{{ old('harga_opsional') }}" placeholder="Kosongkan jika tidak diisi" class="w-full bg-[#F4F1E6] dark:bg-[#171D18] text-[#302C25] dark:text-[#F1EBDD] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] px-3.5 py-2.5 text-sm tabular-nums" />
-              </div>
+            <input
+                id="harga_opsional"
+                name="harga_opsional"
+                type="text"
+                inputmode="numeric"
+                data-format-rupiah
+                value="{{ old('harga_opsional') !== null ? (int) old('harga_opsional') : '' }}"
+                placeholder="Kosongkan jika tidak diisi"
+                class="w-full bg-[#F4F1E6] dark:bg-[#171D18] text-[#302C25] dark:text-[#F1EBDD] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] px-3.5 py-2.5 text-sm tabular-nums"
+            />              </div>
             </div>
 
             <div>
@@ -205,9 +213,20 @@
                   <input name="tahun_pembuatan" type="number" required value="{{ $karya->tahun_pembuatan }}" class="w-full bg-[#F4F1E6] dark:bg-[#171D18] text-[#302C25] dark:text-[#F1EBDD] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] px-3 py-2 text-sm tabular-nums" />
                 </div>
                 <div class="sm:col-span-2">
-                  <label class="block label-caps mb-1 text-[#302C25] dark:text-[#F1EBDD]">MEDIA / BAHAN *</label>
-                  <input name="media_bahan" type="text" required value="{{ $karya->media_bahan }}" class="w-full bg-[#F4F1E6] dark:bg-[#171D18] text-[#302C25] dark:text-[#F1EBDD] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] px-3 py-2 text-sm" />
-                </div>
+<input
+    name="media_bahan"
+    type="text"
+    required
+    value="{{ $karya->media_bahan }}"
+    class="w-full bg-[#F4F1E6] dark:bg-[#171D18] text-[#302C25] dark:text-[#F1EBDD] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] px-3 py-2 text-sm"
+/>              <input
+                  name="harga_opsional"
+                  type="text"
+                  inputmode="numeric"
+                  data-format-rupiah
+                  value="{{ $karya->harga_opsional !== null ? (int) $karya->harga_opsional : '' }}"
+                  class="w-full bg-[#F4F1E6] dark:bg-[#171D18] text-[#302C25] dark:text-[#F1EBDD] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] px-3 py-2 text-sm tabular-nums"
+/>                </div>
                 <div>
                   <label class="block label-caps mb-1 text-[#302C25] dark:text-[#F1EBDD]">DIMENSI</label>
                   <input name="dimensi" type="text" value="{{ $karya->dimensi ?? '' }}" class="w-full bg-[#F4F1E6] dark:bg-[#171D18] text-[#302C25] dark:text-[#F1EBDD] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] px-3 py-2 text-sm" />
@@ -339,28 +358,47 @@
 
           @forelse($riwayat_pameran as $pameran)
             <article class="bg-[#FBF9F2] dark:bg-[#293326] border border-[#D6D1C2] dark:border-[#3A4637] rounded-[0.25rem] p-5">
-              <div class="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <span class="px-2 py-0.5 bg-[#D4A943] text-[#302C25] text-xs font-bold tabular-nums rounded-[0.125rem]">{{ $pameran->tahun }}</span>
-                  <h3 class="mt-2 font-display text-xl font-semibold text-[#302C25] dark:text-[#F1EBDD]">{{ $pameran->nama_pameran }}</h3>
-                  <p class="text-xs text-[#68705C] dark:text-[#B8BDAA]">{{ $pameran->lokasi }}</p>
+              <div class="flex flex-col items-start gap-4">
+              <div class="w-full min-w-0">
+                  <span class="px-2 py-0.5 bg-[#D4A943] text-[#302C25] text-xs font-bold tabular-nums rounded-[0.125rem]">
+                      {{ $pameran->tahun }}
+                  </span>
+
+                  <h3 class="mt-2 font-display text-xl font-semibold text-[#302C25] dark:text-[#F1EBDD]">
+                      {{ $pameran->nama_pameran }}
+                  </h3>
+
+                  <p class="text-xs text-[#68705C] dark:text-[#B8BDAA]">
+                      {{ $pameran->lokasi }}
+                  </p>
+
                   @if($pameran->deskripsi)
-                    <p class="mt-2 text-sm text-[#302C25] dark:text-[#F1EBDD]/90">{{ $pameran->deskripsi }}</p>
+                      <p class="mt-2 text-sm text-[#302C25] dark:text-[#F1EBDD]/90">
+                          {{ $pameran->deskripsi }}
+                      </p>
                   @endif
-                </div>
-                <div class="flex items-center gap-2">
-                  <button type="button" data-buka-edit="edit-pameran-{{ $pameran->id }}" class="px-3 py-1.5 border border-[#354638] dark:border-[#A5B18A] text-[#354638] dark:text-[#A5B18A] text-xs font-semibold rounded-[0.25rem] hover:bg-[#354638] hover:text-[#FBF9F2]">
-                    Ubah
-                  </button>
-                  <form method="POST" action="{{ route('dasbor.seniman.pameran.hapus', $pameran) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="px-3 py-1.5 border border-[#BA1A1A] text-[#BA1A1A] dark:text-[#FFDAD6] text-xs font-semibold rounded-[0.25rem] hover:bg-[#BA1A1A] hover:text-[#FBF9F2]">
-                      Hapus
-                    </button>
-                  </form>
-                </div>
               </div>
+
+              <div class="flex items-center gap-2">
+                  <button
+                      type="button"
+                      data-buka-edit="edit-pameran-{{ $pameran->id }}"
+                      class="px-3 py-1.5 border border-[#354638] dark:border-[#A5B18A] text-[#354638] dark:text-[#A5B18A] text-xs font-semibold rounded-[0.25rem] hover:bg-[#354638] hover:text-[#FBF9F2]">
+                      Ubah
+                  </button>
+
+                  <form method="POST" action="{{ route('dasbor.seniman.pameran.hapus', $pameran) }}">
+                      @csrf
+                      @method('DELETE')
+
+                      <button
+                          type="submit"
+                          class="px-3 py-1.5 border border-[#BA1A1A] text-[#BA1A1A] dark:text-[#FFDAD6] text-xs font-semibold rounded-[0.25rem] hover:bg-[#BA1A1A] hover:text-[#FBF9F2]">
+                          Hapus
+                      </button>
+                  </form>
+              </div>
+          </div>
 
               {{-- Formulir Ubah Riwayat Pameran Inline --}}
               <form id="edit-pameran-{{ $pameran->id }}" method="POST" action="{{ route('dasbor.seniman.pameran.perbarui', $pameran) }}" class="hidden mt-4 pt-4 border-t border-[#D6D1C2] dark:border-[#3A4637] grid grid-cols-1 sm:grid-cols-3 gap-3">

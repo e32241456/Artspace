@@ -67,9 +67,9 @@ class DasborAdminController extends Controller
         $karya->update([
             'status' => $data['status'],
             'catatan_moderasi' => $data['status'] === KaryaSeni::STATUS_DITANGGUHKAN
-                ? ($data['catatan_moderasi'] ?: 'Konten ditangguhkan karena melanggar ketentuan kurasi ARTSPACE.')
+                ? (($data['catatan_moderasi'] ?? null) ?: 'Konten ditangguhkan karena melanggar ketentuan kurasi ARTSPACE.')
                 : null,
-        ]);
+                ]);
 
         return back()->with('sukses', "Status publikasi karya \"{$karya->judul}\" diperbarui menjadi {$data['status']}.");
     }
